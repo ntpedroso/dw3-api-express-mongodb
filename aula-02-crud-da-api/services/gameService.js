@@ -37,6 +37,32 @@ class gameService {
             console.log(error);
         }
     }
+
+    //método para excluir o jogo
+    async Delete(id) {
+        try {
+            await Game.findByIdAndDelete(id);
+            //esse método de cima busca um registro pela id e deleta
+            console.log(`O jogo com a id ${id} foi deletado.`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    //método para alterar um jogo
+    async Update(id, title, year, platform, price) {
+        try {
+            await Game.findByIdAndUpdate(id, {
+                title, 
+                year,
+                platform,
+                price
+            });
+            console.log(`O jogo com a id ${id} foi alterado.`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 // usar new quando for classe

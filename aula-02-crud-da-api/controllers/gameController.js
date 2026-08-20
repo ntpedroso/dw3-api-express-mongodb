@@ -2,6 +2,9 @@
 // importando o service
 import gameService from "../services/gameService.js";
 
+//importando o ObjectId do mongodb
+import { ObjectId } from 'mongodb';
+
 // função que irá tratar a requisição para listar os jogos
 const getAllGames = async (req,res) => {
     try {
@@ -31,5 +34,44 @@ const createGame = async (req,res) => {
     }
 }
 
+//função que trata a requisição para excluir um jogo
+const deleteGame = async (req,res) => {
+    try {
+        //coletando a id da rota
+        const id = req.params.id;
+        //fazendo a validação do ObjectId
+        if (ObjectId.isValid(id)) {
+            await gameService.Delete(id);
+            //204: código no content - requisição bem sucedida, mas não há conteúdo para enviar
+            //sendStatus apenas para o código de status - não permite enviar conteúdo json junto com ele
+            res.sendStatus(204);
+        } else {
+            //código 400 - bad request
+            res.status(400).json({error: 'Requisição mal formada, ID inválido.'});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: 'Ocorreu um erro ao deletar o jogo. Erro interno no servidor.'});
+    }
+}
+
+//função que trata a requisição para alterar um jogo
+const updateGame = async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (ObjectId.isValid(id)) {
+            //coletando os dados que serão alterados
+            const {title, year, platform, price} = req.body;
+            await gameService.Update(id, title, year, platform, price);
+            res.status(200).json({message: 'Jogo atualizado com sucesso!'});
+        } else {
+            res.status(400).json({error: 'Requisição mal formada, ID inválido.'})
+        }
+    } catch (error) {
+        console.log(error);
+        res.Status(500).json({error: 'Ocorreu um erro ao alterar o jogo. Erro interno no servidor.'});
+    }
+}
+
 //exportando as funções
-export default { getAllGames, createGame };
+export default { getAllGames, createGame, deleteGame, updateGame };
