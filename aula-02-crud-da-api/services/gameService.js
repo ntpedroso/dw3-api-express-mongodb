@@ -63,6 +63,18 @@ class gameService {
             console.log(error);
         }
     }
+
+    //método para listar um registro único
+    async getOne(id) {
+        try {
+            //findOne é um método do mongoose para selecionar um registro único
+            //o _id é o campo que está no banco, comparando se bate com o id que está no parâmetro
+            const game = await Game.findOne({_id : id})
+            return game
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 // usar new quando for classe
